@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User, Thought } = require('../models');
 
 const userController = {
     getAllUsers(req, res) {
@@ -27,7 +27,6 @@ const userController = {
             select: '-__v'
         })
         .select('-__v')
-        .select('-__id')
         .then(dbUserData => res.json(dbUserData))
         .catch(err => {
             console.log(err);
@@ -42,7 +41,7 @@ const userController = {
     },
 
     updateUser({ params, body }, res){
-        User.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
+        User.findOneAndUpdate({ _id: params.userId }, body, { new: true, runValidators: true })
         .then(dbUserData => {
             if (!dbUserData) {
                 res.status(404).json({ message: 'No user found with this id!' });
@@ -55,7 +54,15 @@ const userController = {
 
     deleteUser({ params }, res) {
         User.findOneAndDelete({ _id: params.id })
-        .then(dbUserData => res.json(dbUserData))
+        .then((dbUserData) => {
+            if (!dbUserData) {
+                res.status(404).json({ message: 'No user found with this ID!' });
+                return;
+            }
+            Thought.deleteMany({ username: dbUserData.username })
+            .then(res.json( { message: 'User and associated thoughts were deleted successfully!' }))
+            .catch((err) => res.status(404).json(err));
+        })
         .catch(err => res.json(err))
     },
 
