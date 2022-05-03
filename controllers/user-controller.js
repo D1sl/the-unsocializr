@@ -2,9 +2,16 @@ const { User, Thought } = require('../models');
 
 const userController = {
     getAllUsers(req, res) {
+        // Find all users
         User.find({})
+        // Include the users friends in the response
         .populate({
             path: 'friends',
+            select: '-__v'
+        })
+        // Include the users thoughts in the response
+        .populate({
+            path: 'thoughts',
             select: '-__v'
         })
         .select('-__v')
@@ -41,6 +48,7 @@ const userController = {
     },
 
     updateUser({ params, body }, res){
+        // On update, make sure that validators are being enforced by using runValidators.
         User.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
         .then(dbUserData => {
             if (!dbUserData) {

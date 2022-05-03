@@ -13,6 +13,7 @@ const UserSchema = new Schema(
             required: true,
             unique: true,
             trim: true,
+            // Match email using RegEx
             match: /.+\@.+\..+/
         },
         thoughts: [
@@ -24,6 +25,7 @@ const UserSchema = new Schema(
         friends: [
             {
                 type: Schema.Types.ObjectId,
+                // References self to create friendship connections
                 ref: 'User'
             }
         ]
