@@ -1,30 +1,5 @@
 const { Schema, model, Types } = require('mongoose');
 
-const ThoughtSchema = new Schema(
-    {
-        thoughtText: {
-            type: String,
-            required: true,
-            minlength: 1,
-            maxlength: 280
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now
-        },
-        username: {
-            type: String,
-            required: true
-        },
-        reactions: [ReactionSchema]
-    },
-    {
-        toJSON: {
-            virtuals: true,
-        }
-    }
-)
-
 const ReactionSchema = new Schema(
     {
         reactionId: {
@@ -50,8 +25,35 @@ const ReactionSchema = new Schema(
     }
 )
 
+const ThoughtSchema = new Schema(
+    {
+        thoughtText: {
+            type: String,
+            required: true,
+            minlength: 1,
+            maxlength: 280
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
+        },
+        username: {
+            type: String,
+            required: true
+        },
+        reactions: [ReactionSchema]
+    },
+    {
+        toJSON: {
+            virtuals: true,
+        }
+    }
+)
+
 ThoughtSchema.virtual('reactionCount').get(function () {
     return this.reactions.reduce((total, reaction) => total + reaction.length + 1, 0)
 });
+
+const Thought = model('Thought', ThoughtSchema);
 
 module.exports = Thought;
