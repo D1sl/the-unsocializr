@@ -9,5 +9,6 @@ const {
 router
     .route('/')
     .get(getAllUsers)
+    .post(createUser)
 
 module.exports = router;
