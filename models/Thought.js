@@ -1,3 +1,4 @@
+const { DateTime } = require('luxon');
 const { Schema, model, Types } = require('mongoose');
 
 const ReactionSchema = new Schema(
@@ -17,11 +18,15 @@ const ReactionSchema = new Schema(
         },
         createdAt: {
             type: Date,
-            default: Date.now
+            default: Date.now,
+            get: (createdAtVal) => 
+            DateTime.fromJSDate(createdAtVal).toLocaleString(DateTime.DATETIME_MED)
         }
     },
     {
-        toJSON: {}
+        toJSON: {
+            getters: true
+        }
     }
 )
 
@@ -35,7 +40,9 @@ const ThoughtSchema = new Schema(
         },
         createdAt: {
             type: Date,
-            default: Date.now
+            default: Date.now,
+            get: (createdAtVal) => 
+            DateTime.fromJSDate(createdAtVal).toLocaleString(DateTime.DATETIME_MED)
         },
         username: {
             type: String,
@@ -46,6 +53,7 @@ const ThoughtSchema = new Schema(
     {
         toJSON: {
             virtuals: true,
+            getters: true,
             id: false
         }
     }
