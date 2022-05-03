@@ -37,6 +37,12 @@ const thoughtController = {
             res.json(dbThoughtData)
         })
         .catch(err => res.json(err))
+    },
+    
+    deleteThought({ params }, res) {
+        Thought.findOneAndDelete({ _id: params.id })
+        .then(dbThoughtData => res.json(dbThoughtData))
+        .catch(err => res.json(err))
     }
 }
 
